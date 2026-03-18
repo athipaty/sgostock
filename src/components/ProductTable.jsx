@@ -1,8 +1,7 @@
-import { useRef } from "react";
 import { deleteProduct } from "../api/products";
+import { useRef } from "react";
 
-
-function SwipeCard({ p, onEdit}) {
+function SwipeCard({ p, onEdit }) {
   const startX = useRef(null);
   const THRESHOLD = 60;
 

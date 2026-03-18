@@ -69,11 +69,11 @@ export default function ProductModal({ product, onClose, onRefresh }) {
         }
       `}</style>
       <div
-        className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 md:p-4"
+        className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 px-4 md:px-0"
         style={{ animation: "fadeIn 0.25s ease forwards" }}
       >
         <div
-          className="bg-white rounded-2xl w-full md:max-w-md shadow-xl mx-4 mb-4 md:mx-0 md:mb-0"
+          className="bg-white rounded-2xl w-full md:max-w-md shadow-xl mb-4 md:mb-0 overflow-hidden"
           style={{ animation: "slideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards" }}
         >
           {/* Header */}
@@ -85,47 +85,46 @@ export default function ProductModal({ product, onClose, onRefresh }) {
           {/* Body — compact layout */}
           <div className="px-4 py-3 space-y-3">
 
-            {/* Image + Name side by side */}
-            <div className="flex gap-3 items-start">
-              <div className="shrink-0">
-                <ImageUpload value={form.imageUrl} onChange={(url) => setForm((prev) => ({ ...prev, imageUrl: url }))} compact />
-              </div>
-              <div className="flex-1 space-y-2">
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Name</label>
-                  <input name="name" value={form.name} onChange={handleChange}
-                    placeholder="Product name"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </div>
-                {/* Stock + Unit */}
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Stock</label>
-                  <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
-                    <button type="button"
-                      onClick={() => setForm((prev) => ({ ...prev, stock: Math.max(0, Number(prev.stock) - 1) }))}
-                      className="w-8 h-9 bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg shrink-0"
-                    >−</button>
-                    <input name="stock" type="number" min="0" value={form.stock} onChange={handleChange}
-                      className="flex-1 min-w-0 py-2 text-sm text-center focus:outline-none" />
-                    <button type="button"
-                      onClick={() => setForm((prev) => ({ ...prev, stock: Number(prev.stock) + 1 }))}
-                      className="w-8 h-9 bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg shrink-0"
-                    >+</button>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <div className="w-1/2">
-                    <label className="block text-xs text-gray-400 mb-1">Price ($)</label>
-                    <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange}
-                      className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="block text-xs text-gray-400 mb-1">Unit</label>
-                    <input name="unit" value={form.unit} onChange={handleChange} placeholder="kg, pcs..."
-                      className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
+            {/* Image — top centered */}
+            <ImageUpload value={form.imageUrl} onChange={(url) => setForm((prev) => ({ ...prev, imageUrl: url }))} compact />
+
+            {/* Name */}
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Name</label>
+              <input name="name" value={form.name} onChange={handleChange}
+                placeholder="Product name"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            {/* Stock + Unit */}
+            <div className="flex gap-2">
+              <div className="w-1/2">
+                <label className="block text-xs text-gray-400 mb-1">Stock</label>
+                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                  <button type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, stock: Math.max(0, Number(prev.stock) - 1) }))}
+                    className="w-8 h-9 bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg shrink-0"
+                  >−</button>
+                  <input name="stock" type="number" min="0" value={form.stock} onChange={handleChange}
+                    className="flex-1 min-w-0 py-2 text-sm text-center focus:outline-none" />
+                  <button type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, stock: Number(prev.stock) + 1 }))}
+                    className="w-8 h-9 bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg shrink-0"
+                  >+</button>
                 </div>
               </div>
+              <div className="w-1/2">
+                <label className="block text-xs text-gray-400 mb-1">Unit</label>
+                <input name="unit" value={form.unit} onChange={handleChange} placeholder="kg"
+                  className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+
+            {/* Price */}
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Price ($)</label>
+              <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange}
+                className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             {/* Locations */}
