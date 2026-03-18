@@ -1,7 +1,7 @@
 import { deleteProduct } from "../api/products";
 import { useRef } from "react";
 
-function SwipeCard({ p, onEdit }) {
+function SwipeCard({ p, onEdit}) {
   const startX = useRef(null);
   const THRESHOLD = 60;
 
@@ -73,7 +73,7 @@ export default function ProductTable({ products, onEdit, onRefresh }) {
   return (
     <>
       {/* Mobile: swipeable cards */}
-      <div className="flex flex-col gap-3 md:hidden">
+      <div className="flex flex-col gap-1 md:hidden">
         {products.map((p) => (
           <SwipeCard key={p._id} p={p} onEdit={onEdit} />
         ))}
