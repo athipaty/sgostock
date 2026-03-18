@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 const CLOUD_NAME = "dil2ttxah";
 const UPLOAD_PRESET = "tingtong";
 
-export default function ImageUpload({ value, onChange }) {
+export default function ImageUpload({ value, onChange, compact }) {
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef();
@@ -33,12 +33,14 @@ export default function ImageUpload({ value, onChange }) {
     handleFile(e.dataTransfer.files[0]);
   };
 
+  const size = compact ? "w-24 h-24" : "w-40 h-40";
+
   return (
     <div className="flex flex-col items-center">
       <label className="block text-xs text-gray-500 mb-2">Image</label>
 
       {value ? (
-        <div className="relative w-40 h-40 rounded-xl overflow-hidden border border-gray-200">
+        <div className={`relative ${size} rounded-xl overflow-hidden border border-gray-200`}>
           <img src={value} alt="Product" className="w-full h-full object-cover" />
           <button
             onClick={() => onChange("")}
@@ -53,7 +55,7 @@ export default function ImageUpload({ value, onChange }) {
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
           onDrop={handleDrop}
-          className={`w-40 h-40 rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors
+          className={`${size} rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors
             ${dragging ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-gray-50 hover:bg-gray-100"}`}
         >
           {uploading ? (

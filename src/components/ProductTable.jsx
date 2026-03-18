@@ -1,7 +1,8 @@
 import { useRef } from "react";
-import { adjustStock, deleteProduct } from "../api/products";
+import { deleteProduct } from "../api/products";
 
-function SwipeCard({ p, onEdit, onRefresh }) {
+
+function SwipeCard({ p, onEdit }) {
   const startX = useRef(null);
   const THRESHOLD = 60;
 
@@ -14,11 +15,6 @@ function SwipeCard({ p, onEdit, onRefresh }) {
     const diff = startX.current - e.changedTouches[0].clientX;
     if (diff > THRESHOLD) onEdit(p);
     startX.current = null;
-  };
-
-  const handleStock = async (adjustment) => {
-    await adjustStock(p._id, adjustment);
-    onRefresh();
   };
 
   return (
@@ -43,25 +39,13 @@ function SwipeCard({ p, onEdit, onRefresh }) {
           {/* Top row: name + price */}
           <div className="flex items-center justify-between gap-2">
             <p className="font-medium text-gray-800 truncate">{p.name}</p>
-            <p className="text-sm font-semibold text-gray-800 shrink-0">${(p.price ?? 0).toFixed(2)}</p>
+            
           </div>
 
           {/* Bottom row: stock controls + unit */}
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleStock(-1)}
-                className="w-8 h-8 rounded-lg bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg"
-              >
-                −
-              </button>
-              <span className="w-8 text-center text-sm font-semibold text-gray-800">{p.stock}</span>
-              <button
-                onClick={() => handleStock(1)}
-                className="w-8 h-8 rounded-lg bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg"
-              >
-                +
-              </button>
+              <span className="text-sm font-semibold text-gray-800">{p.stock}</span>
             </div>
             <span className="text-xs text-gray-400">{p.unit}</span>
           </div>
@@ -75,11 +59,6 @@ export default function ProductTable({ products, onEdit, onRefresh }) {
   const handleDelete = async (id) => {
     if (!confirm("Delete this product?")) return;
     await deleteProduct(id);
-    onRefresh();
-  };
-
-  const handleStock = async (id, adjustment) => {
-    await adjustStock(id, adjustment);
     onRefresh();
   };
 
@@ -127,23 +106,7 @@ export default function ProductTable({ products, onEdit, onRefresh }) {
                   )}
                 </td>
                 <td className="px-4 py-3 font-medium text-gray-800">{p.name}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleStock(p._id, -1)}
-                      className="w-6 h-6 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center font-bold transition-colors"
-                    >
-                      −
-                    </button>
-                    <span className="w-8 text-center font-medium text-gray-800">{p.stock}</span>
-                    <button
-                      onClick={() => handleStock(p._id, 1)}
-                      className="w-6 h-6 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center font-bold transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
+                <td className="px-4 py-3 font-medium text-gray-800">{p.stock}</td>
                 <td className="px-4 py-3 text-gray-500">{p.unit}</td>
                 <td className="px-4 py-3 text-gray-800">${(p.price ?? 0).toFixed(2)}</td>
                 <td className="px-4 py-3">
