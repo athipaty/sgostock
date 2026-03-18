@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { deleteProduct } from "../api/products";
 
 
-function SwipeCard({ p, onEdit }) {
+function SwipeCard({ p, onEdit}) {
   const startX = useRef(null);
   const THRESHOLD = 60;
 
@@ -21,33 +21,34 @@ function SwipeCard({ p, onEdit }) {
     <div className="relative rounded-xl overflow-hidden">
       {/* Card */}
       <div
-        className="relative bg-white border border-gray-200 rounded-xl p-4 flex gap-3"
+        className="relative bg-white border border-gray-200 rounded-xl p-3 flex gap-3"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         {/* Image */}
         {p.imageUrl ? (
-          <img src={p.imageUrl} alt={p.name} className="w-16 h-16 rounded-lg object-cover shrink-0" />
+          <img src={p.imageUrl} alt={p.name} className="w-14 h-14 rounded-lg object-cover shrink-0" />
         ) : (
-          <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-xs shrink-0">
+          <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-xs shrink-0">
             N/A
           </div>
         )}
 
         {/* Info */}
-        <div className="flex-1 min-w-0 flex flex-col justify-between">
-          {/* Top row: name + price */}
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-medium text-gray-800 truncate">{p.name}</p>
-            
-          </div>
+        <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
+          {/* Name */}
+          <p className="font-medium text-gray-800 truncate">{p.name}</p>
 
-          {/* Bottom row: stock controls + unit */}
-          <div className="flex items-center justify-between mt-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-gray-800">{p.stock}</span>
-            </div>
-            <span className="text-xs text-gray-400">{p.unit}</span>
+          {/* Stock + unit + locations */}
+          <div className="flex items-center flex-wrap gap-2">
+            <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold">
+              {p.stock} {p.unit}
+            </span>
+            {p.locations?.slice(0, 2).map((l, i) => (
+              <span key={i} className="px-2 py-0.5 bg-green-50 text-green-600 rounded-full text-sm">
+                {l}
+              </span>
+            ))}
           </div>
         </div>
       </div>
@@ -75,7 +76,7 @@ export default function ProductTable({ products, onEdit, onRefresh }) {
       {/* Mobile: swipeable cards */}
       <div className="flex flex-col gap-3 md:hidden">
         {products.map((p) => (
-          <SwipeCard key={p._id} p={p} onEdit={onEdit} onRefresh={onRefresh} />
+          <SwipeCard key={p._id} p={p} onEdit={onEdit} />
         ))}
       </div>
 

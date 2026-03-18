@@ -37,7 +37,6 @@ export default function ImageUpload({ value, onChange, compact }) {
 
   return (
     <div className="flex flex-col items-center">
-      <label className="block text-xs text-gray-500 mb-2">Image</label>
 
       {value ? (
         <div className={`relative ${size} rounded-xl overflow-hidden border border-gray-200`}>
