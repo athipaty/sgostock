@@ -39,40 +39,31 @@ function SwipeCard({ p, onEdit, onRefresh }) {
         )}
 
         {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0 flex flex-col justify-between">
+          {/* Top row: name + price */}
+          <div className="flex items-center justify-between gap-2">
             <p className="font-medium text-gray-800 truncate">{p.name}</p>
             <p className="text-sm font-semibold text-gray-800 shrink-0">${(p.price ?? 0).toFixed(2)}</p>
           </div>
 
-          <p className="text-xs text-gray-400 mt-0.5">{p.unit}</p>
-
-          {/* Suppliers */}
-          {p.suppliers?.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
-              {p.suppliers.map((s, i) => (
-                <span key={i} className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full text-xs">
-                  {s}
-                </span>
-              ))}
+          {/* Bottom row: stock controls + unit */}
+          <div className="flex items-center justify-between mt-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleStock(-1)}
+                className="w-8 h-8 rounded-lg bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg"
+              >
+                −
+              </button>
+              <span className="w-8 text-center text-sm font-semibold text-gray-800">{p.stock}</span>
+              <button
+                onClick={() => handleStock(1)}
+                className="w-8 h-8 rounded-lg bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg"
+              >
+                +
+              </button>
             </div>
-          )}
-
-          {/* Stock */}
-          <div className="flex items-center gap-2 mt-3">
-            <button
-              onClick={() => handleStock(-1)}
-              className="w-7 h-7 rounded-lg bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold"
-            >
-              −
-            </button>
-            <span className="w-8 text-center text-sm font-medium text-gray-800">{p.stock}</span>
-            <button
-              onClick={() => handleStock(1)}
-              className="w-7 h-7 rounded-lg bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold"
-            >
-              +
-            </button>
+            <span className="text-xs text-gray-400">{p.unit}</span>
           </div>
         </div>
       </div>

@@ -53,8 +53,19 @@ export default function ProductModal({ product, onClose, onRefresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 md:p-4">
-      <div className="bg-white rounded-t-2xl md:rounded-2xl w-full md:max-w-md shadow-xl max-h-[90vh] overflow-y-auto">
+    <>
+    <style>{`
+      @keyframes slideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    `}</style>
+    <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 md:p-4" style={{ animation: "fadeIn 0.25s ease forwards" }}>
+      <div className="bg-white rounded-t-2xl md:rounded-2xl w-full md:max-w-md shadow-xl max-h-[90vh] overflow-y-auto" style={{ animation: "slideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards" }}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800">
@@ -189,5 +200,6 @@ export default function ProductModal({ product, onClose, onRefresh }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
