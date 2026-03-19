@@ -36,8 +36,7 @@ export default function ProductModal({ product, onClose, onRefresh }) {
   const updateSupplier = (i, field, value) => {
     setForm((prev) => {
       const updated = [...prev.suppliers];
-      const isNumeric = field === "stock" || field === "price";
-      updated[i] = { ...updated[i], [field]: isNumeric ? Number(value) || 0 : value };
+      updated[i] = { ...updated[i], [field]: value };
       return { ...prev, suppliers: updated };
     });
   };
@@ -69,8 +68,8 @@ export default function ProductModal({ product, onClose, onRefresh }) {
         ...form,
         suppliers: form.suppliers.map((s) => ({
           ...s,
-          stock: Number(s.stock),
-          price: Number(s.price),
+          stock: Number(s.stock) || 0,
+          price: Number(s.price) || 0,
         })),
       };
       if (product) {
@@ -157,30 +156,30 @@ export default function ProductModal({ product, onClose, onRefresh }) {
                     </div>
 
                     {/* Stock + Unit + Price */}
-                    <div className="grid grid-cols-3 gap-2">
-                      <div>
+                    <div className="flex gap-2">
+                      <div style={{width:"55%"}}>
                         <label className="block text-xs text-gray-400 mb-1 text-center">Stock</label>
                         <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                           <button type="button"
-                            onClick={() => updateSupplier(i, "stock", Math.max(0, s.stock - 1))}
+                            onClick={() => updateSupplier(i, "stock", String(Math.max(0, Number(s.stock) - 1)))}
                             className="w-7 h-8 bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold shrink-0"
                           >−</button>
                           <input type="number" min="0" value={s.stock}
                             onChange={(e) => updateSupplier(i, "stock", e.target.value)}
                             className="flex-1 min-w-0 py-1.5 text-sm text-center focus:outline-none" />
                           <button type="button"
-                            onClick={() => updateSupplier(i, "stock", s.stock + 1)}
+                            onClick={() => updateSupplier(i, "stock", String(Number(s.stock) + 1))}
                             className="w-7 h-8 bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center justify-center font-bold shrink-0"
                           >+</button>
                         </div>
                       </div>
-                      <div>
+                      <div style={{width:"22.5%"}}>
                         <label className="block text-xs text-gray-400 mb-1 text-center">Unit</label>
                         <input value={s.unit} onChange={(e) => updateSupplier(i, "unit", e.target.value)}
                           placeholder="kg"
                           className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
                       </div>
-                      <div>
+                      <div style={{width:"22.5%"}}>
                         <label className="block text-xs text-gray-400 mb-1 text-center">Price ($)</label>
                         <input type="number" min="0" step="0.01" value={s.price}
                           onChange={(e) => updateSupplier(i, "price", e.target.value)}

@@ -1,23 +1,58 @@
+import { useState, useRef } from "react";
 import { deleteProduct } from "../api/products";
 
-function SwipeCard({ p, onEdit }) {
-  // Build stock display
+function SwipeCard({ p, onEdit, expanded, onToggle }) {
+  const [showImage, setShowImage] = useState(false);
+  const startX = useRef(null);
+  const THRESHOLD = 60;
+
+  const handleTouchStart = (e) => {
+    startX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (startX.current === null) return;
+    const diff = e.changedTouches[0].clientX - startX.current;
+    if (diff > THRESHOLD) {
+      onEdit(p);
+    } else if (Math.abs(diff) < 10) {
+      onToggle(p._id);
+    }
+    startX.current = null;
+  };
+
   const units = [...new Set(p.suppliers?.map((s) => s.unit).filter(Boolean))];
   const sameUnit = units.length === 1;
-  const totalStock = p.suppliers?.reduce((sum, s) => sum + (s.stock ?? 0), 0) ?? 0;
+  const totalStock = p.suppliers?.reduce((sum, s) => sum + (Number(s.stock) || 0), 0) ?? 0;
   const stockDisplay = sameUnit
     ? `${totalStock} ${units[0]}`
     : (p.suppliers || []).map((s) => `${s.stock} ${s.unit}`).join(" + ");
 
   return (
-    <div className="relative rounded-xl overflow-hidden">
-      <div
-        className="relative bg-white border border-gray-200 rounded-xl p-3 flex gap-3"
-        onClick={() => onEdit(p)}
-      >
+    <div className="relative bg-white border border-gray-200 rounded-xl overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Fullscreen image overlay */}
+      {showImage && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setShowImage(false)}
+        >
+          <img src={p.imageUrl} alt={p.name} className="max-w-full max-h-full rounded-xl object-contain p-4" />
+        </div>
+      )}
+
+      {/* Main row */}
+      <div className="p-3 flex gap-3">
         {/* Image */}
         {p.imageUrl ? (
-          <img src={p.imageUrl} alt={p.name} className="w-14 h-14 rounded-lg object-cover shrink-0" />
+          <img
+            src={p.imageUrl} alt={p.name}
+            className="w-14 h-14 rounded-lg object-cover shrink-0 cursor-pointer"
+            onTouchEnd={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); e.preventDefault(); setShowImage(true); }}
+          />
         ) : (
           <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-xs shrink-0">
             N/A
@@ -26,8 +61,10 @@ function SwipeCard({ p, onEdit }) {
 
         {/* Info */}
         <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
-          <p className="font-medium text-gray-800 truncate">{p.name}</p>
-
+          <div className="flex items-center justify-between">
+            <p className="font-medium text-gray-800 truncate">{p.name}</p>
+            <span className="text-gray-300 text-xs ml-2">{expanded ? "▲" : "▼"}</span>
+          </div>
           <div className="flex items-center flex-wrap gap-2">
             <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold">
               {stockDisplay}
@@ -38,8 +75,18 @@ function SwipeCard({ p, onEdit }) {
               </span>
             ))}
           </div>
+        </div>
+      </div>
 
-
+      {/* Expanded detail */}
+      <div style={{ maxHeight: expanded ? "200px" : "0px", overflow: "hidden", transition: "max-height 0.3s ease" }}>
+        <div className="border-t border-gray-100 px-3 py-2 space-y-1">
+          {p.suppliers?.map((s, i) => (
+            <div key={i} className="flex items-center justify-between text-sm">
+              <span className="text-gray-500">{s.name}</span>
+              <span className="font-medium text-gray-700">{s.stock} {s.unit}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -47,6 +94,10 @@ function SwipeCard({ p, onEdit }) {
 }
 
 export default function ProductTable({ products, onEdit, onRefresh }) {
+  const [expandedId, setExpandedId] = useState(null);
+
+  const handleToggle = (id) => setExpandedId((prev) => prev === id ? null : id);
+
   const handleDelete = async (id) => {
     if (!confirm("Delete this product?")) return;
     await deleteProduct(id);
@@ -66,7 +117,7 @@ export default function ProductTable({ products, onEdit, onRefresh }) {
       {/* Mobile: cards */}
       <div className="flex flex-col gap-1 md:hidden">
         {products.map((p) => (
-          <SwipeCard key={p._id} p={p} onEdit={onEdit} />
+          <SwipeCard key={p._id} p={p} onEdit={onEdit} expanded={expandedId === p._id} onToggle={handleToggle} />
         ))}
       </div>
 
