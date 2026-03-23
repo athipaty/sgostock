@@ -79,7 +79,11 @@ function SwipeCard({ p, onEdit, expanded, onToggle }) {
       </div>
 
       {/* Expanded detail */}
-      <div style={{ maxHeight: expanded ? "200px" : "0px", overflow: "hidden", transition: "max-height 0.3s ease" }}>
+      <div style={{
+        maxHeight: expanded ? "500px" : "0",
+        overflow: "hidden",
+        transition: expanded ? "max-height 0.35s ease-out" : "max-height 0.2s ease-in",
+      }}>
         <div className="border-t border-gray-100 px-3 py-2 space-y-1">
           {p.suppliers?.map((s, i) => (
             <div key={i} className="flex items-center justify-between text-sm">
