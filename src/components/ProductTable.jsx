@@ -46,18 +46,25 @@ function SwipeCard({ p, onEdit, expanded, onToggle }) {
       {/* Main row */}
       <div className="p-3 flex gap-3">
         {/* Image */}
-        {p.imageUrl ? (
-          <img
-            src={p.imageUrl} alt={p.name}
-            className="w-14 h-14 rounded-lg object-cover shrink-0 cursor-pointer"
-            onTouchEnd={(e) => e.stopPropagation()}
-            onClick={(e) => { e.stopPropagation(); e.preventDefault(); setShowImage(true); }}
-          />
-        ) : (
-          <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-xs shrink-0">
-            N/A
-          </div>
-        )}
+        <div className="relative shrink-0">
+          {p.imageUrl ? (
+            <img
+              src={p.imageUrl} alt={p.name}
+              className="w-14 h-14 rounded-lg object-cover cursor-pointer"
+              onTouchEnd={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); e.preventDefault(); setShowImage(true); }}
+            />
+          ) : (
+            <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-xs">
+              N/A
+            </div>
+          )}
+          {p.suppliers?.length > 1 && (
+            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+              {p.suppliers.length}
+            </span>
+          )}
+        </div>
 
         {/* Info */}
         <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
