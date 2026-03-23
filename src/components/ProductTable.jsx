@@ -6,19 +6,30 @@ function SwipeCard({ p, onEdit, expanded, onToggle }) {
   const startX = useRef(null);
   const THRESHOLD = 60;
 
+  const startY = useRef(null);
+
   const handleTouchStart = (e) => {
     startX.current = e.touches[0].clientX;
+    startY.current = e.touches[0].clientY;
   };
 
   const handleTouchEnd = (e) => {
     if (startX.current === null) return;
-    const diff = e.changedTouches[0].clientX - startX.current;
-    if (diff > THRESHOLD) {
+    const diffX = e.changedTouches[0].clientX - startX.current;
+    const diffY = e.changedTouches[0].clientY - startY.current;
+    // Ignore if vertical scroll
+    if (Math.abs(diffY) > 10) {
+      startX.current = null;
+      startY.current = null;
+      return;
+    }
+    if (diffX > THRESHOLD) {
       onEdit(p);
-    } else if (Math.abs(diff) < 10) {
+    } else if (Math.abs(diffX) < 10) {
       onToggle(p._id);
     }
     startX.current = null;
+    startY.current = null;
   };
 
   const units = [...new Set(p.suppliers?.map((s) => s.unit).filter(Boolean))];
