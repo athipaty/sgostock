@@ -98,14 +98,27 @@ function SwipeCard({ p, onEdit, expanded, onToggle }) {
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-gray-100 px-3 py-2 space-y-1">
-          {p.suppliers?.map((s, i) => (
-            <div key={i} className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">{s.name}</span>
-              <span className="font-medium text-gray-700">{s.stock} {s.unit}</span>
-            </div>
-          ))}
-        </div>
+        <>
+          <style>{`
+            @keyframes fadeSlideIn {
+              from { opacity: 0; transform: translateY(-6px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
+          <div
+            className="border-t border-gray-100 px-3 py-2 space-y-1"
+            style={{ animation: "fadeSlideIn 0.25s ease forwards", opacity: 0 }}
+          >
+            {p.suppliers?.map((s, i) => (
+              <div key={i} className="flex items-center justify-between text-sm"
+                style={{ animation: "fadeSlideIn 0.25s ease forwards", animationDelay: `${i * 0.05}s`, opacity: 0 }}
+              >
+                <span className="text-gray-500">{s.name}</span>
+                <span className="font-medium text-gray-700">{s.stock} {s.unit}</span>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
