@@ -97,22 +97,16 @@ function SwipeCard({ p, onEdit, expanded, onToggle }) {
       </div>
 
       {/* Expanded detail */}
-      <div style={{
-        display: "grid",
-        gridTemplateRows: expanded ? "1fr" : "0fr",
-        transition: "grid-template-rows 0.2s ease-out",
-      }}>
-        <div style={{ overflow: "hidden" }}>
-          <div className="border-t border-gray-100 px-3 py-2 space-y-1">
-            {p.suppliers?.map((s, i) => (
-              <div key={i} className="flex items-center justify-between text-sm">
-                <span className="text-gray-500">{s.name}</span>
-                <span className="font-medium text-gray-700">{s.stock} {s.unit}</span>
-              </div>
-            ))}
-          </div>
+      {expanded && (
+        <div className="border-t border-gray-100 px-3 py-2 space-y-1">
+          {p.suppliers?.map((s, i) => (
+            <div key={i} className="flex items-center justify-between text-sm">
+              <span className="text-gray-500">{s.name}</span>
+              <span className="font-medium text-gray-700">{s.stock} {s.unit}</span>
+            </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
